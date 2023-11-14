@@ -1,0 +1,47 @@
+image: 
+  repository:  guaracyalima/kong
+  tag: v4
+
+env:
+  prefix: /kong_prefix/
+  database: "off"
+  plugins: bundled,oidc,kong-jwt2header
+  
+admin:
+  enabled: true
+  http:
+    enabled: true
+    servicePort: 8001
+    containerPort: 8001
+  tls:
+    parameters: []
+  labels:
+    enable-metrics: "true"
+
+postgresql:
+  enabled: false
+
+ingressController:
+  enabled: true
+  installCRDs: false
+  ingressClass: "kong"
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8100"
+
+proxy:
+  type: NodePort
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+# controller:
+#   ingressClass: "kong"
+#   ingress:
+#     enabled: true
+#     annotations:
+#      konghq.com/protocols: "http"
